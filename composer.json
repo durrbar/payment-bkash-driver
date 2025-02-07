@@ -21,7 +21,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Durrbar\\PaymentBkashDriver\\BkashServiceProvider"
+                "Durrbar\\PaymentBkashDriver\\Providers\\BkashServiceProvider"
             ]
         }
     }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Durrbar\PaymentBkashDriver;
+namespace Durrbar\PaymentBkashDriver\Providers;
 
 use Illuminate\Support\ServiceProvider;
 
@@ -8,7 +8,7 @@ class BkashServiceProvider extends ServiceProvider
 {
     public function register()
     {
-        $this->mergeConfigFrom(__DIR__ . '/../config/bkash.php', 'payment.providers.bkash');
+        $this->mergeConfigFrom(__DIR__ . '/../../config/bkash.php', 'payment.providers.bkash');
     }
 
     public function boot()
