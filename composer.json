@@ -1,0 +1,28 @@
+{
+    "name": "durrbar/payment-bkash-driver",
+    "description": "A Laravel package to integrate the bKash Payment Gateway with the durrbar/payment-module.",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Kid Max",
+            "email": "kidmax285@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Durrbar\\PaymentBkashDriver\\": "src/"
+        }
+    },
+    "require": {
+        "php": "^8.0",
+        "illuminate/support": "^11.0"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Durrbar\\PaymentBkashDriver\\BkashServiceProvider"
+            ]
+        }
+    }
+}
