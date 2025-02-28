@@ -1,7 +1,7 @@
 <?php
-
 namespace Durrbar\PaymentBkashDriver\Http;
 
+use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
@@ -17,55 +17,37 @@ class BkashHttpClient
         $this->getToken();
     }
 
-    public function sendRequest($url, $method, $data = null, $useToken = true, $customHeaders = [], $retried = false)
+    /**
+     * Initialize the HTTP client with base configuration.
+     */
+    public function client(): PendingRequest
     {
-        $headers = array_merge([
+        return Http::withHeaders([
             'Content-Type' => 'application/json',
             'Accept' => 'application/json',
-        ], $customHeaders);
-
-        if ($useToken) {
-            $this->token = cache()->get('bkash_token', null);
-            if (!$this->token && !$retried) {
-                Log::warning('bKash token missing, attempting refresh.');
-                $this->refreshToken();
-                return $this->sendRequest($url, $method, $data, $useToken, $customHeaders, true);
-            }
-            if (!$this->token) {
-                Log::error('bKash token retrieval failed. Cannot proceed with request.');
-                return ['status' => 'error', 'message' => 'Authentication failed'];
-            }
-            $headers['Authorization'] = 'Bearer ' . $this->token;
-            $headers['X-APP-Key'] = $this->config->getAppKey();
-        }
-
-        $response = Http::withHeaders($headers)->{$method}($this->config->getBaseUrl() . $url, $data ?? []);
-
-        if (!$response->successful()) {
-            Log::error("bKash API Request Failed", ['url' => $url, 'response' => $response->body()]);
-            return [
-                'status' => 'error',
-                'message' => 'bKash API request failed',
-                'error' => $response->body(),
-            ];
-        }
-
-        return $response->json();
+            'Authorization' => 'Bearer ' . $this->token,
+            'X-APP-Key' => $this->config->getAppKey(),
+        ])
+        ->baseUrl($this->config->getBaseUrl())
+        ->timeout(60);
     }
 
+    /**
+     * Retrieve or refresh the bKash token.
+     */
     protected function getToken()
     {
         if ($this->token = cache()->get('bkash_token')) {
             return; // Use cached token
         }
 
-        $response = $this->sendRequest('/tokenized/checkout/token/grant', 'POST', [
+        $response = $this->client()->post('/tokenized/checkout/token/grant', [
             'app_key' => $this->config->getAppKey(),
             'app_secret' => $this->config->getAppSecret(),
-        ], false, [
+        ], [
             'username' => $this->config->getUsername(),
             'password' => $this->config->getPassword(),
-        ]);
+        ])->json();
 
         if (!empty($response['id_token'])) {
             $this->token = $response['id_token'];
@@ -78,6 +60,9 @@ class BkashHttpClient
         }
     }
 
+    /**
+     * Refresh the bKash token.
+     */
     protected function refreshToken()
     {
         $refreshToken = cache()->get('bkash_refresh_token');
@@ -86,14 +71,14 @@ class BkashHttpClient
             return $this->getToken(); // Request a new token if refresh token is missing
         }
 
-        $response = $this->sendRequest('/tokenized/checkout/token/refresh', 'POST', [
+        $response = $this->client()->post('/tokenized/checkout/token/refresh', [
             'app_key' => $this->config->getAppKey(),
             'app_secret' => $this->config->getAppSecret(),
             'refresh_token' => $refreshToken,
-        ], false, [
+        ], [
             'username' => $this->config->getUsername(),
             'password' => $this->config->getPassword(),
-        ]);
+        ])->json();
 
         if (!empty($response['id_token'])) {
             $this->token = $response['id_token'];

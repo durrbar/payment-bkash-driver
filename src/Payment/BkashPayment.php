@@ -1,5 +1,4 @@
 <?php
-
 namespace Durrbar\PaymentBkashDriver\Payment;
 
 use Durrbar\PaymentBkashDriver\Config\BkashConfig;
@@ -12,7 +11,7 @@ class BkashPayment
     protected $httpClient;
     protected $driver;
 
-    public function __construct(BkashConfig $config, BKashHttpClient $httpClient, BasePaymentDriver $driver)
+    public function __construct(BkashConfig $config, BkashHttpClient $httpClient, BasePaymentDriver $driver)
     {
         $this->config = $config;
         $this->httpClient = $httpClient;
@@ -38,7 +37,7 @@ class BkashPayment
             'merchantInvoiceNumber' => $payment['tran_id'],
         ];
 
-        $response = $this->httpClient->sendRequest('/tokenized/checkout/payment/create', 'POST', $payload);
+        $response = $this->httpClient->client()->post('/tokenized/checkout/payment/create', $payload)->json();
 
         $status = isset($response['statusCode']) && $response['statusCode'] === '0000' ? 'success' : 'error';
         $message = $response['statusMessage'] ?? $response['errorMessage'] ?? 'Unknown error';
@@ -49,6 +48,6 @@ class BkashPayment
 
     public function verifyPayment(string $transactionId): array
     {
-        return $this->httpClient->sendRequest("/tokenized/checkout/payment/query/{$transactionId}", 'POST');
+        return $this->httpClient->client()->post("/tokenized/checkout/payment/query/{$transactionId}")->json();
     }
 }

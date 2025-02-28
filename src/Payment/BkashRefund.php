@@ -1,7 +1,8 @@
 <?php
-
 namespace Durrbar\PaymentBkashDriver\Payment;
 
+use Durrbar\PaymentBkashDriver\Config\BkashConfig;
+use Durrbar\PaymentBkashDriver\Http\BkashHttpClient;
 use Durrbar\PaymentBkashDriver\Job\CheckBkashRefundStatusJob;
 use Illuminate\Support\Facades\Log;
 
@@ -10,7 +11,7 @@ class BkashRefund
     protected $config;
     protected $httpClient;
 
-    public function __construct($config, $httpClient)
+    public function __construct(BkashConfig $config, BkashHttpClient $httpClient)
     {
         $this->config = $config;
         $this->httpClient = $httpClient;
@@ -35,8 +36,7 @@ class BkashRefund
             'reason'    => 'Customer request',
         ];
 
-        $response = $this->httpClient->sendRequest('/v2/tokenized-checkout/refund/payment/transaction', 'POST', $payload);
-
+        $response = $this->httpClient->client()->post('/v2/tokenized-checkout/refund/payment/transaction', $payload)->json();
         Log::info('bKash Refund Response', ['response' => $response]);
 
         if (!empty($response['statusCode']) && $response['statusCode'] === '0000') {
@@ -53,7 +53,6 @@ class BkashRefund
 
             // Dispatch job to check refund status after 30 seconds
             CheckBkashRefundStatusJob::dispatch($payment->transactionId)->delay(now()->addSeconds(30));
-
             return [
                 'status'  => 'pending',
                 'message' => 'Refund initiated. Checking status in 30 seconds.',
@@ -68,8 +67,7 @@ class BkashRefund
 
     public function checkRefundStatus(string $trxID): array
     {
-        $response = $this->httpClient->sendRequest('/v2/tokenized-checkout/refund/payment/status', 'POST', ['trxID' => $trxID]);
-
+        $response = $this->httpClient->client()->post('/v2/tokenized-checkout/refund/payment/status', ['trxID' => $trxID])->json();
         Log::info('bKash Refund Status', ['response' => $response]);
 
         if (!empty($response['statusCode']) && $response['statusCode'] === '0000') {
