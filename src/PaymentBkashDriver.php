@@ -4,17 +4,21 @@ namespace Durrbar\PaymentBkashDriver;
 
 use Durrbar\PaymentBkashDriver\Config\BkashConfig;
 use Durrbar\PaymentBkashDriver\Http\BkashHttpClient;
+use Durrbar\PaymentBkashDriver\Payment\BkashHandler;
 use Durrbar\PaymentBkashDriver\Payment\BkashPayment;
 use Durrbar\PaymentBkashDriver\Payment\BkashRefund;
-use Durrbar\PaymentBkashDriver\Payment\BkashHandler;
 use Modules\Payment\Drivers\BasePaymentDriver;
 
 class PaymentBkashDriver extends BasePaymentDriver
 {
     protected $config;
+
     protected $httpClient;
+
     protected $payment;
+
     protected $refund;
+
     protected $handler;
 
     public function __construct()

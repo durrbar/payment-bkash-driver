@@ -5,11 +5,17 @@ namespace Durrbar\PaymentBkashDriver\Config;
 class BkashConfig
 {
     protected $sandbox;
+
     protected $appKey;
+
     protected $appSecret;
+
     protected $username;
+
     protected $password;
+
     protected $callbackURL;
+
     protected $baseUrl;
 
     public function __construct()

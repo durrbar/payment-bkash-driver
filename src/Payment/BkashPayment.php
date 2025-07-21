@@ -1,4 +1,5 @@
 <?php
+
 namespace Durrbar\PaymentBkashDriver\Payment;
 
 use Durrbar\PaymentBkashDriver\Config\BkashConfig;
@@ -8,7 +9,9 @@ use Modules\Payment\Drivers\BasePaymentDriver;
 class BkashPayment
 {
     protected $config;
+
     protected $httpClient;
+
     protected $driver;
 
     public function __construct(BkashConfig $config, BkashHttpClient $httpClient, BasePaymentDriver $driver)

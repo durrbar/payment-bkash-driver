@@ -2,17 +2,20 @@
 
 namespace Durrbar\PaymentBkashDriver\Job;
 
+use Durrbar\PaymentBkashDriver\Payment\BkashRefund;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Queue\SerializesModels;
-use Durrbar\PaymentBkashDriver\Payment\BkashRefund; // Import BkashRefund
+use Illuminate\Queue\SerializesModels; // Import BkashRefund
 use Illuminate\Support\Facades\Log;
 
 class CheckBkashRefundStatusJob implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
 
     protected string $transactionId;
 

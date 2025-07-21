@@ -7,8 +7,11 @@ use Illuminate\Support\Facades\Log;
 class BkashAuth
 {
     protected $config;
+
     protected $httpClient;
+
     protected $token;
+
     protected $refreshToken;
 
     public function __construct($config, $httpClient)
@@ -32,7 +35,7 @@ class BkashAuth
             'password' => $this->config->getPassword(),
         ]);
 
-        if (!empty($response['id_token'])) {
+        if (! empty($response['id_token'])) {
             $this->token = $response['id_token'];
             $this->refreshToken = $response['refresh_token'];
             cache()->put('bkash_token', $this->token, now()->addMinutes(55));
@@ -46,8 +49,9 @@ class BkashAuth
     protected function refreshToken()
     {
         $refreshToken = cache()->get('bkash_refresh_token');
-        if (!$refreshToken) {
+        if (! $refreshToken) {
             Log::error('No refresh token found, requesting a new token.');
+
             return $this->getToken(); // Request a new token if refresh token is missing
         }
 
@@ -60,7 +64,7 @@ class BkashAuth
             'password' => $this->config->getPassword(),
         ]);
 
-        if (!empty($response['id_token'])) {
+        if (! empty($response['id_token'])) {
             $this->token = $response['id_token'];
             $this->refreshToken = $response['refresh_token'];
             cache()->put('bkash_token', $this->token, now()->addMinutes(55));
@@ -73,6 +77,6 @@ class BkashAuth
 
     public function getTokenHeader()
     {
-        return ['Authorization' => 'Bearer ' . $this->token];
+        return ['Authorization' => 'Bearer '.$this->token];
     }
 }

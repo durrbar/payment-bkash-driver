@@ -1,4 +1,5 @@
 <?php
+
 namespace Durrbar\PaymentBkashDriver\Http;
 
 use Illuminate\Http\Client\PendingRequest;
@@ -8,7 +9,9 @@ use Illuminate\Support\Facades\Log;
 class BkashHttpClient
 {
     protected $config;
+
     protected $token;
+
     protected $refreshToken;
 
     public function __construct($config)
@@ -25,11 +28,11 @@ class BkashHttpClient
         return Http::withHeaders([
             'Content-Type' => 'application/json',
             'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . $this->token,
+            'Authorization' => 'Bearer '.$this->token,
             'X-APP-Key' => $this->config->getAppKey(),
         ])
-        ->baseUrl($this->config->getBaseUrl())
-        ->timeout(60);
+            ->baseUrl($this->config->getBaseUrl())
+            ->timeout(60);
     }
 
     /**
@@ -49,7 +52,7 @@ class BkashHttpClient
             'password' => $this->config->getPassword(),
         ])->json();
 
-        if (!empty($response['id_token'])) {
+        if (! empty($response['id_token'])) {
             $this->token = $response['id_token'];
             $this->refreshToken = $response['refresh_token'];
             cache()->put('bkash_token', $this->token, now()->addMinutes(55));
@@ -66,8 +69,9 @@ class BkashHttpClient
     protected function refreshToken()
     {
         $refreshToken = cache()->get('bkash_refresh_token');
-        if (!$refreshToken) {
+        if (! $refreshToken) {
             Log::error('No refresh token found, requesting a new token.');
+
             return $this->getToken(); // Request a new token if refresh token is missing
         }
 
@@ -80,7 +84,7 @@ class BkashHttpClient
             'password' => $this->config->getPassword(),
         ])->json();
 
-        if (!empty($response['id_token'])) {
+        if (! empty($response['id_token'])) {
             $this->token = $response['id_token'];
             $this->refreshToken = $response['refresh_token'];
             cache()->put('bkash_token', $this->token, now()->addMinutes(55));
