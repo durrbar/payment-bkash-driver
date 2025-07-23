@@ -14,7 +14,7 @@ class BkashServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->publishes([
-            __DIR__.'/../config/bkash.php' => config_path('bkash.php'),
+            __DIR__.'/../../config/bkash.php' => config_path('bkash.php'),
         ], 'bkash-config');
     }
 }
