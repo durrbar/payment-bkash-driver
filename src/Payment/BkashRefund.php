@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Durrbar\PaymentBkashDriver\Payment;
 
 use Durrbar\PaymentBkashDriver\Config\BkashConfig;
@@ -7,11 +9,11 @@ use Durrbar\PaymentBkashDriver\Http\BkashHttpClient;
 use Durrbar\PaymentBkashDriver\Job\CheckBkashRefundStatusJob;
 use Illuminate\Support\Facades\Log;
 
-class BkashRefund
+final class BkashRefund
 {
-    protected $config;
+    private $config;
 
-    protected $httpClient;
+    private $httpClient;
 
     public function __construct(BkashConfig $config, BkashHttpClient $httpClient)
     {

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Durrbar\PaymentBkashDriver\Job;
 
 use Durrbar\PaymentBkashDriver\Payment\BkashRefund;
@@ -10,7 +12,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels; // Import BkashRefund
 use Illuminate\Support\Facades\Log;
 
-class CheckBkashRefundStatusJob implements ShouldQueue
+final class CheckBkashRefundStatusJob implements ShouldQueue
 {
     use Dispatchable;
     use InteractsWithQueue;

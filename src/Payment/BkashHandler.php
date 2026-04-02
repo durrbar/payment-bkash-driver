@@ -1,18 +1,20 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Durrbar\PaymentBkashDriver\Payment;
 
 use Durrbar\PaymentBkashDriver\Config\BkashConfig;
 use Durrbar\PaymentBkashDriver\Http\BkashHttpClient;
 use Modules\Payment\Drivers\BasePaymentDriver;
 
-class BKashHandler
+final class BKashHandler
 {
-    protected $config;
+    private $config;
 
-    protected $httpClient;
+    private $httpClient;
 
-    protected $driver;
+    private $driver;
 
     public function __construct(BkashConfig $config, BkashHttpClient $httpClient, BasePaymentDriver $driver)
     {

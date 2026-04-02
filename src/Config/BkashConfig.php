@@ -1,22 +1,24 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Durrbar\PaymentBkashDriver\Config;
 
-class BkashConfig
+final class BkashConfig
 {
-    protected $sandbox;
+    private $sandbox;
 
-    protected $appKey;
+    private $appKey;
 
-    protected $appSecret;
+    private $appSecret;
 
-    protected $username;
+    private $username;
 
-    protected $password;
+    private $password;
 
-    protected $callbackURL;
+    private $callbackURL;
 
-    protected $baseUrl;
+    private $baseUrl;
 
     public function __construct()
     {
@@ -27,13 +29,6 @@ class BkashConfig
         $this->password = config('payment.providers.bkash.password');
         $this->callbackURL = config('payment.providers.bkash.callbackURL');
         $this->setBaseUrl();
-    }
-
-    protected function setBaseUrl()
-    {
-        $this->baseUrl = $this->sandbox
-            ? 'https://tokenized.sandbox.bka.sh/v1.2.0-beta'
-            : 'https://tokenized.pay.bka.sh/v1.2.0-beta';
     }
 
     public function getBaseUrl()
@@ -64,5 +59,12 @@ class BkashConfig
     public function getCallbackURL()
     {
         return $this->callbackURL;
+    }
+
+    private function setBaseUrl()
+    {
+        $this->baseUrl = $this->sandbox
+            ? 'https://tokenized.sandbox.bka.sh/v1.2.0-beta'
+            : 'https://tokenized.pay.bka.sh/v1.2.0-beta';
     }
 }

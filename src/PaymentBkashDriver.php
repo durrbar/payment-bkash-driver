@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Durrbar\PaymentBkashDriver;
 
 use Durrbar\PaymentBkashDriver\Config\BkashConfig;
@@ -9,7 +11,7 @@ use Durrbar\PaymentBkashDriver\Payment\BkashPayment;
 use Durrbar\PaymentBkashDriver\Payment\BkashRefund;
 use Modules\Payment\Drivers\BasePaymentDriver;
 
-class PaymentBkashDriver extends BasePaymentDriver
+final class PaymentBkashDriver extends BasePaymentDriver
 {
     protected $config;
 

@@ -1,18 +1,20 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Durrbar\PaymentBkashDriver\Http;
 
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
-class BkashHttpClient
+final class BkashHttpClient
 {
-    protected $config;
+    private $config;
 
-    protected $token;
+    private $token;
 
-    protected $refreshToken;
+    private $refreshToken;
 
     public function __construct($config)
     {
@@ -38,7 +40,7 @@ class BkashHttpClient
     /**
      * Retrieve or refresh the bKash token.
      */
-    protected function getToken()
+    private function getToken()
     {
         if ($this->token = cache()->get('bkash_token')) {
             return; // Use cached token
@@ -66,7 +68,7 @@ class BkashHttpClient
     /**
      * Refresh the bKash token.
      */
-    protected function refreshToken()
+    private function refreshToken()
     {
         $refreshToken = cache()->get('bkash_refresh_token');
         if (! $refreshToken) {

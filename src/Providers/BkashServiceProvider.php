@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Durrbar\PaymentBkashDriver\Providers;
 
 use Illuminate\Support\ServiceProvider;
 
-class BkashServiceProvider extends ServiceProvider
+final class BkashServiceProvider extends ServiceProvider
 {
     public function register()
     {

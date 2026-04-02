@@ -1,7 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
+use Durrbar\PaymentBkashDriver\PaymentBkashDriver;
+
 return [
-    'driver' => \Durrbar\PaymentBkashDriver\PaymentBkashDriver::class,
+    'driver' => PaymentBkashDriver::class,
     'sandbox' => env('BKASH_SANDBOX', true), // true for testing
     'app_key' => env('BKASH_APP_KEY'),
     'app_secret' => env('BKASH_APP_SECRET'),

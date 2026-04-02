@@ -1,18 +1,20 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Durrbar\PaymentBkashDriver\Auth;
 
 use Illuminate\Support\Facades\Log;
 
-class BkashAuth
+final class BkashAuth
 {
-    protected $config;
+    private $config;
 
-    protected $httpClient;
+    private $httpClient;
 
-    protected $token;
+    private $token;
 
-    protected $refreshToken;
+    private $refreshToken;
 
     public function __construct($config, $httpClient)
     {
@@ -21,7 +23,12 @@ class BkashAuth
         $this->getToken();
     }
 
-    protected function getToken()
+    public function getTokenHeader()
+    {
+        return ['Authorization' => 'Bearer '.$this->token];
+    }
+
+    private function getToken()
     {
         if ($this->token = cache()->get('bkash_token')) {
             return; // Use cached token
@@ -46,7 +53,7 @@ class BkashAuth
         }
     }
 
-    protected function refreshToken()
+    private function refreshToken()
     {
         $refreshToken = cache()->get('bkash_refresh_token');
         if (! $refreshToken) {
@@ -73,10 +80,5 @@ class BkashAuth
         } else {
             Log::error('bKash token refresh failed', ['response' => $response]);
         }
-    }
-
-    public function getTokenHeader()
-    {
-        return ['Authorization' => 'Bearer '.$this->token];
     }
 }
